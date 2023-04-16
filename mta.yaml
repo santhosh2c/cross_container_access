@@ -1,0 +1,53 @@
+_schema-version: "3.1"
+ID: cross_container_access
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: cross_container_access-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: cross_container_access-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: cross_container_access-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: cross_container_access-db
+    properties:
+      TARGET_CONTAINER: ~{hdi-service-name}
+  - name: test_emp-db
+    group: SERVICE_REPLACEMENTS
+    properties:
+      key: test_emp-db-hdi
+      service: ~{test_emp-db-hdi}
+  parameters:
+    buildpack: nodejs_buildpack
+resources:
+- name: cross_container_access-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+  properties:
+    hdi-service-name: ${service-name}
+- name: test_emp-db
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: test_emp-db
+  properties:
+    test_emp-db-hdi: ${service-name}
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx -p @sap/cds-dk cds build --production

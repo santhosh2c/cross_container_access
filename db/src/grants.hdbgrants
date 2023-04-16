@@ -1,0 +1,14 @@
+{
+  "test_emp-db-hdi": {
+    "object_owner": {
+      "container_roles": [
+        "EMPLOYEES_EXTERNAL_ACCESS_G#"
+      ]
+    },
+    "application_user": {
+      "container_roles": [
+        "EMPLOYEES_EXTERNAL_ACCESS"
+      ]
+    }
+  }
+}

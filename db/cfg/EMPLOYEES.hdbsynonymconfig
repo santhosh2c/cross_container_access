@@ -1,0 +1,8 @@
+{
+    "CROSS_EMPLOYEES": {
+        "target": {
+            "object": "MY_BOOKSHOP_EMPLOYEES",
+            "schema.configure": "test_emp-db-hdi/schema"
+        }
+    }
+}
